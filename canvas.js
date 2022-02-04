@@ -7,9 +7,9 @@ function crearTableroJuego(){
     pincel.fillRect(0, 0, 1200, 800); // x, y, width, height
 }
 
-function dibujarLineas(cantidadLineas){
+function mostrarGuiones(cantidad){
     x = 400;
-    for(i = 0; i < cantidadLineas; i++){
+    for(i = 0; i < cantidad; i++){
 	pincel.fillStyle = "black";
         pincel.fillRect(x, 400, 30, 2);
 	x = x + 60

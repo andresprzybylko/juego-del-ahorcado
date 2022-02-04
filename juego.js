@@ -1,13 +1,21 @@
-
-var botonIniciarJuego = document.querySelector("#iniciar-juego");
 var listaPalabras = ["GATO", "PERRO", "JUEGUETE", "PELOTA", "TROMPO", "ESTUPEFACTO"];
 
-botonIniciarJuego.addEventListener("click",function(event){
-    event.preventDefault();
+var botonIniciarJuego = document.querySelector("#iniciar-juego");
 
-    crearTableroJuego();
+var palabraElegida = botonIniciarJuego.addEventListener("click",function(event){
+    event.preventDefault();
+    
+    if (listaPalabras.length == 0){
+	alert("Ya no quedan palabras disponibles para jugar. Presione Iniciar juego para una nueva partida");
+	location.reload();
+    }
+
+    crearTableroJuego(); //canvas.js
     var palabraElegida = escogerPalabraSecreta(listaPalabras);
+    mostrarGuiones(palabraElegida.length);
+   
     console.log("Esta es la palabra elegida " + palabraElegida);
+   
     var letras = palabraElegida.split("");
     console.log("Palabra dividida en letras: " + letras);
     letras.forEach(function(letra){
@@ -16,8 +24,6 @@ botonIniciarJuego.addEventListener("click",function(event){
 
     });
 
-    var cantidadLineas = palabraElegida.length;
-    dibujarLineas(cantidadLineas);
     return palabraElegida;
     
 });
