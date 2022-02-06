@@ -2,7 +2,7 @@ var listaPalabras = ["GATO", "PERRO", "JUGUETE", "PELOTA", "TROMPO", "ESTUPEFACT
 var palabraElegida = "";
 var letrasPalabraElegida = [];
 var letrasAcertadas = [];
-var letrasEquivocadas = [];
+var letrasEquivocadas = new Set();
 
 var botonIniciarJuego = document.querySelector("#iniciar-juego");
 var html = document.querySelector("html");
@@ -20,8 +20,8 @@ botonIniciarJuego.addEventListener("click",function(event){
     //mostrarGuiones(palabraElegida.length);
     console.log("Esta es la palabra elegida " + palabraElegida);
 
-    letras = palabraElegida.split("");
-    console.log(letras)
+    letrasPalabraElegida = palabraElegida.split("");
+    console.log(letrasPalabraElegida);
 
 
     //capturaTecla();
@@ -30,22 +30,15 @@ botonIniciarJuego.addEventListener("click",function(event){
 
 	var letraCapturada = event.key;
         console.log('La letra capturada es: ' + letraCapturada);
-
+	
 	var testLetra = false;
-        var testLetra = validarLetra(letraCapturada);
+        testLetra = validarLetra(letraCapturada);
         if (testLetra){
 	    console.log('La letra ' + letraCapturada + ' es valida');
-    	    return compararLetras(letraCapturadai, letras);
+    	    compararLetras(letraCapturada, letrasPalabraElegida);
         }
 	
-
     });
-
-
-
-
-
-
 
 });
 
@@ -78,39 +71,41 @@ function escogerPalabraSecreta(listaPalabras){
 // Paso 4 - validar letra - devuelve boolean
 function validarLetra(letra){
     caracter = letra.charCodeAt();
+    var resultado;
     if (caracter >= 65 && caracter <= 90) {
-	return true;
+	resultado = true;
     }else{
 	// ***** cambiar este alert por box en html *******
 	alert('Ingrese una letra válida. Sólo mayúsculas y sin caracteres especiales ni números');
+	resultado = false;
     }
-
+    return resultado;
 }
 
 // verificar si pertenece a la palabra elegida y si lo es, escribirla en su lugar sobre los guiones
 
-function compararLetras(letraCapturada, letrasPalabraElegida){
-    console.log("Palabra dividida en letras: " + letrasPalabraElegida);
-    var busquedaIndice = letrasPalabraElegida.indexOf(letraCapturada);
-    if (busquedaIndice == -1){
-	letrasEquivocadas.push(letraCapturada);
-    }else{
+function compararLetras(letraParaComparar, letrasPalabraElegida){
 
-	if ((busquedaIndice) < letrasPalabraElegida.length - 1){
-	    var nuevoIndice = 
-	    
-	}
+    var usoPrevio = verificarUsoPrevio(letraParaComparar);
+    if (!usoPrevio){
+        console.log("Palabra dividida en letras: " + letrasPalabraElegida);
+
+
+        if (letrasPalabraElegida.includes(letraParaComparar)){
+            letrasPalabraElegida.forEach(function(letra){
+                if (letraParaComparar == letra){
+            	letrasAcertadas.push(letra);
+                }
+            });
+            
+
+        }else{
+            if(letraParaComparar){
+                letrasEquivocadas.add(letraParaComparar);
+                alert("Su letra elegida no está en la palabra secreta");
+            }
+        }
     }
-
-
-
-
-
-
-
-
-
-
 }
 
 
@@ -137,14 +132,21 @@ function compararLetras(letraCapturada, letras){
 	console.log("Estas son las letras que quedan por adivinar: " + (letras.length - letrasAcertadas.length)); 
     }
 }
-
-function verificarUsoPrevio(letra){
-    if (letrasAcertadas.includes(letra) || letrasEquivocadas.inclues(letra)){
-	alert("Esa letra ya fue utilizada. Ingrese otra letra")
-    }
-
-}
 */
+function verificarUsoPrevio(letra){
+    var letraVerificada = true;
+    var warning = "Esa letra ya fue utilizada. Ingrese otra letra";
+    console.log("Se verifico letra si fue usada");
+    if (letrasAcertadas.length > 0 && letrasAcertadas.includes(letra)){
+	alert(warning);
+    }else if (letrasEquivocadas.size > 0 && letrasEquivocadas.has(letra)){
+	alert(warning);
+    }else{
+	letraVerificada = false;
+    }
+    return letraVerificada;
+}
+
 
 
 
