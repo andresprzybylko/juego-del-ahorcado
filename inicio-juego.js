@@ -94,7 +94,11 @@ function compararLetras(letraParaComparar, letrasPalabraElegida){
         if (letrasPalabraElegida.includes(letraParaComparar)){
             letrasPalabraElegida.forEach(function(letra){
                 if (letraParaComparar == letra){
-            	letrasAcertadas.push(letra);
+		    letrasAcertadas.push(letra);
+		    if (letrasPalabraElegida.length == letrasAcertadas.length){
+			alert('Felicidades! Ha ganado el juego adivinando la palabra ' + palabraElegida);
+			// ******* crear funcion reinicio de juego sin refresh page *********
+		    }
                 }
             });
             
@@ -106,6 +110,7 @@ function compararLetras(letraParaComparar, letrasPalabraElegida){
             }
         }
     }
+    //return aca retornar letra para dibujar
 }
 
 
