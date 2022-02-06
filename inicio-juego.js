@@ -17,7 +17,7 @@ botonIniciarJuego.addEventListener("click",function(event){
     crearTableroJuego(); //canvas.js
     
     palabraElegida = escogerPalabraSecreta(listaPalabras);
-    //mostrarGuiones(palabraElegida.length);
+    mostrarGuiones(palabraElegida.length);
     console.log("Esta es la palabra elegida " + palabraElegida);
 
     letrasPalabraElegida = palabraElegida.split("");
@@ -95,6 +95,7 @@ function compararLetras(letraParaComparar, letrasPalabraElegida){
             letrasPalabraElegida.forEach(function(letra){
                 if (letraParaComparar == letra){
 		    letrasAcertadas.push(letra);
+		    dibujarLetraAcertada(letra, letrasPalabraElegida);
 		    if (letrasPalabraElegida.length == letrasAcertadas.length){
 			alert('Felicidades! Ha ganado el juego adivinando la palabra ' + palabraElegida);
 			// ******* crear funcion reinicio de juego sin refresh page *********
