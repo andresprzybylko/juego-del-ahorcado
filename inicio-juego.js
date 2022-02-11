@@ -1,198 +1,190 @@
 var listaPalabras = ["GATO", "PERRO", "JUGUETE", "PELOTA", "TROMPO", "ESTUPEFACTO"];
+var nuevaPalabra = false;
 var palabraElegida = "";
 var letrasPalabraElegida = [];
 var letrasAcertadas = [];
 var letrasEquivocadas = new Set();
+var juegoTerminado = false;
+var mensajeFinal = "";
+var mensaje = "";
 
+//emojis
+var tristeEmoji = String.fromCodePoint(128549);
+var abrazoEmoji = String.fromCodePoint(129303);
+var pulgarArribaEmoji = String.fromCodePoint(128077); 
+var pulgarAbajoEmoji = String.fromCodePoint(128078); 
+var altoEmoji = String.fromCodePoint(129306);
+var invalidoEmoji = String.fromCodePoint(9940);
+
+//sonidos
+var sonidoInicio = new Audio("sounds/intro.wav");
+var sonidoFinJuegoPerdedor = new Audio("sounds/240195__doctor-jekyll__wah-wah-trumpet-failed-joke-punch-line.wav");
+var sonidoFinJuegoGanador = new Audio("sounds/15383_1460406134.mp3");
+
+//selectores
 var botonIniciarJuego = document.querySelector("#iniciar-juego");
 var html = document.querySelector("html");
+var cartelError = document.querySelector("#cartel-error");
 
+//desarrollo
 botonIniciarJuego.addEventListener("click",function(event){
-    //event.preventDefault();
-    if (listaPalabras.length == 0){
-	alert("Ya no quedan palabras disponibles para jugar. Presione Iniciar juego para una nueva partida");
-	location.reload();
-    }
-
+    sonidoInicio.play();
     crearTableroJuego(); //canvas.js
     
-    palabraElegida = escogerPalabraSecreta(listaPalabras);
+    if (nuevaPalabra){
+	let pos = listaPalabras.length;
+	console.log('numero' + pos);
+	palabraElegida = listaPalabras[pos - 1];
+    }else{
+	palabraElegida = escogerPalabraSecreta(listaPalabras);
+    }
+
     mostrarGuiones(palabraElegida.length);
-    console.log("Esta es la palabra elegida " + palabraElegida);
-
     letrasPalabraElegida = palabraElegida.split("");
-    console.log(letrasPalabraElegida);
 
+    dibujarHorca();
 
-    //capturaTecla();
     html.addEventListener('keypress', (event) => {
-	event.preventDefault();
-
-	var letraCapturada = event.key;
-        console.log('La letra capturada es: ' + letraCapturada);
-	
-	var testLetra = false;
-        testLetra = validarLetra(letraCapturada);
-        if (testLetra){
-	    console.log('La letra ' + letraCapturada + ' es valida');
-    	    compararLetras(letraCapturada, letrasPalabraElegida);
-        }
-	
+        event.preventDefault();
+        if(juegoTerminado){
+	    document.querySelector(".titulo").scrollIntoView();
+	    setTimeout(function(){
+		location.reload();
+	    }, 1000);
+    	}else{
+	    limpiarMensaje();
+            var letraCapturada = event.key;
+            var testLetra = false;
+            testLetra = validarLetra(letraCapturada);
+            if (testLetra){
+		compararLetras(letraCapturada, letrasPalabraElegida);
+            }
+    	}
     });
-
+    
 });
 
-
-
-// Paso 1 - numero para indice que elige palabra - retorna un int ************
+// retorna numero aleatorio
 function indiceAleatorio(listaPalabras) {
     return Math.round(Math.random() * (listaPalabras.length -1));
 }
 
-// Paso 2 - seleccion palabra de la lista con indice aleatorio *****
+//selecciona palabra de la lista con indice aleatorio 
 function escogerPalabraSecreta(listaPalabras){
-
     var pos = indiceAleatorio(listaPalabras);
     var seleccionAleatoria = listaPalabras[pos];
-    //console.log("seleccion aleatoria de palabra " + seleccionAleatoria);
-    listaPalabras.splice(pos, 1);
-    console.log("Quedan " + listaPalabras.length + " palabras para jugar: " + listaPalabras);
-    //hacer funcion para escribir en pantalla las palabras eliminadas y tacharlas 
     return seleccionAleatoria;
 }
-
-
-// Paso 3 - captura de tecla presionada - devuelve string con la letra
-
-//function capturaTecla(){ 
-//}
-
     
-// Paso 4 - validar letra - devuelve boolean
+//validar letra - devuelve boolean
 function validarLetra(letra){
     caracter = letra.charCodeAt();
     var resultado;
-    if (caracter >= 65 && caracter <= 90) {
+    if ((caracter >= 65 && caracter <= 90) && (letra !="Enter")) {
 	resultado = true;
     }else{
-	// ***** cambiar este alert por box en html *******
-	alert('Ingrese una letra válida. Sólo mayúsculas y sin caracteres especiales ni números');
+	mensaje = invalidoEmoji + " Ingrese una letra válida.<br>Sólo mayúsculas.<br>Sin caracteres especiales.<br>Sin números.";
+	mostrarMensaje(mensaje);
 	resultado = false;
     }
     return resultado;
 }
 
-// verificar si pertenece a la palabra elegida y si lo es, escribirla en su lugar sobre los guiones
-
-function compararLetras(letraParaComparar, letrasPalabraElegida){
-
-    var usoPrevio = verificarUsoPrevio(letraParaComparar);
-    if (!usoPrevio){
-        console.log("Palabra dividida en letras: " + letrasPalabraElegida);
-
-
-        if (letrasPalabraElegida.includes(letraParaComparar)){
-            letrasPalabraElegida.forEach(function(letra){
-                if (letraParaComparar == letra){
-		    letrasAcertadas.push(letra);
-		    dibujarLetraAcertada(letra, letrasPalabraElegida);
-		    if (letrasPalabraElegida.length == letrasAcertadas.length){
-			alert('Felicidades! Ha ganado el juego adivinando la palabra ' + palabraElegida);
-			// ******* crear funcion reinicio de juego sin refresh page *********
-		    }
-                }
-            });
-            
-
-        }else{
-            if(letraParaComparar){
-                letrasEquivocadas.add(letraParaComparar);
-                alert("Su letra elegida no está en la palabra secreta");
-            }
-        }
-    }
-    //return aca retornar letra para dibujar
-}
-
-
-/*
-function compararLetras(letraCapturada, letras){
-
-    console.log("Palabra dividida en letras: " + letras);
-    var cantidadLetras = letras.length;
-    for (var i = 0; i < cantidadLetras; i++){
-	console.log("cada letra " + letras[i]);
-	console.log(letras.length);	
-	if (letras[i] == letraCapturada ){
-	    console.log("Esta letra esta siendo dibujada en el canvas");
-
-	    letrasAcertadas.push(letraCapturada);
-            if (letras.length == letrasAcertadas.length){
-                alert('Felicidades! Ha ganado el juego adivinando la palabra ' + palabraElegida);
-		letrasAcertadas.splice(0); // vacio el contenido de este array para elegir otra palabra
-	    }
-	}else{
-	    console.log('No coincide');
-	    letrasEquivocadas.push(letraCapturada);
-	}
-	console.log("Estas son las letras que quedan por adivinar: " + (letras.length - letrasAcertadas.length)); 
-    }
-}
-*/
 function verificarUsoPrevio(letra){
     var letraVerificada = true;
-    var warning = "Esa letra ya fue utilizada. Ingrese otra letra";
-    console.log("Se verifico letra si fue usada");
+    mensaje = altoEmoji + "<br>Esa letra ya fue utilizada.<br>Ingrese otra letra.";
     if (letrasAcertadas.length > 0 && letrasAcertadas.includes(letra)){
-	alert(warning);
+	mostrarMensaje(mensaje);
     }else if (letrasEquivocadas.size > 0 && letrasEquivocadas.has(letra)){
-	alert(warning);
+	mostrarMensaje(mensaje);
     }else{
 	letraVerificada = false;
     }
     return letraVerificada;
 }
 
-
-
-
-
-	
-/*
-        if(letrasErroneas.includes(letra)){
-            alert('Esa letra ya fue utilizada');
-	}else if (letras.includes(letra)){
-	    letrasErroneas.push(letra);
-
-	        }else{
-	letrasErroneas.push(letra);
-
-	    letraAcertada.push(letra);
-    console.log(letrasErroneas);
-*/
-
-/*
-function compararLetras(letraCapturada){
-
-    console.log("Palabra dividida en letras: " + letras);
-
-    
-    for (var i = 0; i < letras.length; i++){
-	console.log("cada letra " + letras[i]);
-	console.log(letras.length);	
-	if (letras[i] == letraCapturada){
-	    console.log("Esta letra esta siendo dibujada en el canvas");
-	    letras.splice(i, 1);
-	    i = i -1 ; // para compensar el indice
-	    /* VERIFICARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-            if (letras.length == 0){
-                alert('Felicidades! Ha ganado el juego adivinando la palabra ' + palabraElegida);
-	    }*//*
-	}else{
-	    console.log('No coincide');
-	}
-	
+// verificar si pertenece a la palabra elegida y si lo es, escribirla en su lugar sobre los guiones
+function compararLetras(letraParaComparar, letrasPalabraElegida){
+    var usoPrevio = verificarUsoPrevio(letraParaComparar);
+    if (!usoPrevio){
+        
+	if (letrasPalabraElegida.includes(letraParaComparar)){
+            letrasPalabraElegida.forEach(function(letra){
+                
+		if (letraParaComparar == letra){
+		    letrasAcertadas.push(letra);
+		    dibujarLetraAcertada(letra, letrasPalabraElegida);
+		    mostrarMensaje(pulgarArribaEmoji);
+		    if (letrasPalabraElegida.length == letrasAcertadas.length){
+			mensaje = '¡Felicidades! <br>Ha ganado el juego ' + abrazoEmoji + '<br>Presione cualquier tecla para volver a jugar';
+			mostrarMensaje(mensaje);
+			sonidoFinJuegoGanador.play();
+			juegoTerminado = true;
+		    }
+                }
+            });
+        }else{
+            if(letraParaComparar){
+                letrasEquivocadas.add(letraParaComparar);
+		dibujarLetraEquivocada(letraParaComparar, letrasEquivocadas);
+		dibujarParteCuerpo(letrasEquivocadas);
+                mensaje = pulgarAbajoEmoji + "Su letra elegida no está en la palabra secreta";
+		mostrarMensaje(mensaje);
+		if (letrasEquivocadas.size == 6){
+		    mensaje = 'Esta vez no lo logró. ' + tristeEmoji + '<br>Inténtelo nuevamente.<br>Presione cualquier tecla para volver a jugar';
+		    mostrarMensaje(mensaje);
+		   // sonidoAmbiente.pause();
+		    sonidoFinJuegoPerdedor.play();
+		    juegoTerminado = true;
+		}
+            }
+        }
     }
-    console.log("Estas son las letras que quedan por adivinar: " + letras); 
 }
+
+
+function mostrarMensaje(mensaje){
+    cartelError.innerHTML = mensaje;
+}
+
+function limpiarMensaje(){
+    cartelError.innerHTML = ""; 
+}
+
+/*
+//funcion de MDN
+function storageAvailable(type) {
+    try {
+        var storage = window[type],
+            x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            storage.length !== 0;
+    }
+}
+
 */
+
+var botonAgregarPalabra = document.querySelector("#nueva-palabra");
+
+botonAgregarPalabra.addEventListener("click",function(event){
+    var inputPalabra = document.querySelector("#input-nueva-palabra").value;
+    var palabraMayuscula = inputPalabra.toUpperCase();
+    listaPalabras.push(palabraMayuscula);
+    nuevaPalabra = true;
+    document.querySelector("#input-nueva-palabra").value = "";    
+});

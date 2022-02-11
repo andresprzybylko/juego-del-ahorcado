@@ -1,59 +1,162 @@
 var canvas = document.getElementById('canvas-ahorcado');
 var pincel = canvas.getContext('2d');
-var posicionesX = [];
+var letrasAcertadasPosX = [];
+var cursiva = new FontFace('cursiva', 'url(fonts/ArchitectsDaughter-Regular.ttf');
+
+cursiva.load().then(function(font){
+  document.fonts.add(font);
+});	
 
 function crearTableroJuego(){
     canvas.scrollIntoView();
-    pincel.fillStyle = "#ffa74f";
+    pincel.fillStyle = "#030e12";
     pincel.fillRect(0, 0, 1200, 800); // x, y, width, height
 }
-
 
 function mostrarGuiones(cantidad){
     x = 400;
     for(i = 0; i < cantidad; i++){
-	pincel.fillStyle = "black";
-        pincel.fillRect(x, 400, 50, 2);
-	posicionesX.push(x);
-	x = x + 100;
+	pincel.fillStyle = "white";
+        pincel.fillRect(x, 590, 25, 5);
+	pincel.stroke();
+	letrasAcertadasPosX.push(x);
+	x = x + 50;
     }
 }
 
-
-
 function dibujarLetra(letra, x, y){
     pincel.textAlign = 'center';
-    pincel.font = '48px serif';
+    pincel.font = '50px cursiva';
     pincel.fillText(letra, x, y);
-
 }
 
 function dibujarLetraAcertada(letra, letrasPalabraElegida){
-    console.log('entro a dibujarletraacertada');
-    console.log('checkin letra y letrasPalabraElegida ' + letra + ' y ' + letrasPalabraElegida);
     for (var i = 0; i < letrasPalabraElegida.length; i++){
-	event.stopPropagation();
 	if (letra == letrasPalabraElegida[i]){
-	    y = 395;
-	    x = posicionesX[i] + 25;
-	    console.log('estoy por dibujar letra, x, y');
+	    y = 580;
+	    x = letrasAcertadasPosX[i] + 12;
 	    dibujarLetra(letra, x, y);
 	}
     }
 }
 
-/* para dibujar cada parte del ahorcado
-// First path
-ctx.beginPath();
-ctx.strokeStyle = 'blue';
-ctx.moveTo(20, 20);
-ctx.lineTo(200, 20);
-ctx.stroke();
+function dibujarLetraEquivocada(letra, letrasEquivocadas){
+    var y = 100;
+    var x = 450 + (letrasEquivocadas.size * 50);
+    dibujarLetra(letra, x, y); 
+}
 
-// Second path
-ctx.beginPath();
-ctx.strokeStyle = 'green';
-ctx.moveTo(20, 20);
-ctx.lineTo(120, 120);
-ctx.stroke();
-*/
+function dibujarHorca(){
+    pincel.beginPath();
+    pincel.lineWidth = 10;
+    pincel.strokeStyle = 'white';
+    pincel.lineCap = "round";
+    pincel.moveTo(50, 600);
+    pincel.lineTo(150,575);
+    pincel.lineTo(250, 600);
+    pincel.moveTo(50, 600);
+    pincel.lineTo(250, 600);
+    pincel.moveTo(150,575);
+    pincel.lineTo(150,200);
+    pincel.lineTo(300,200);
+    pincel.lineTo(300,225);
+    pincel.stroke();
+}
+
+function dibujarParteCuerpo(letrasEquivocadas){
+    if (letrasEquivocadas.size == 1){ //cabeza
+        pincel.beginPath();
+        pincel.lineWidth = 7;
+        pincel.strokeStyle = 'white';
+        pincel.lineCap = "round";
+        pincel.arc(300, 260, 30, 0, 2*3.14);
+	pincel.stroke();
+    }else if (letrasEquivocadas.size == 2){ //tronco
+        pincel.beginPath();
+        pincel.lineWidth = 7;
+        pincel.strokeStyle = 'white';
+        pincel.lineCap = "round";
+        pincel.moveTo(300, 290);
+        pincel.lineTo(300, 450);
+	pincel.stroke();
+    }else if (letrasEquivocadas.size == 3){ //piernaIzq
+        pincel.beginPath();
+        pincel.lineWidth = 7;
+        pincel.strokeStyle = 'white';
+        pincel.lineCap = "round";
+        pincel.moveTo(300, 450);
+        pincel.lineTo(275, 550);
+	pincel.lineTo(260, 535);
+	pincel.stroke();
+    }else if (letrasEquivocadas.size == 4){ //piernaDer
+        pincel.beginPath();
+        pincel.lineWidth = 7;
+        pincel.strokeStyle = 'white';
+        pincel.lineCap = "round";
+        pincel.moveTo(300, 450);
+        pincel.lineTo(325, 550);
+	pincel.lineTo(340, 535);
+	pincel.stroke();
+    }else if (letrasEquivocadas.size == 5){ //brazoIzq
+        pincel.beginPath();
+        pincel.lineWidth = 7;
+        pincel.strokeStyle = 'white';
+        pincel.lineCap = "round";
+        pincel.moveTo(300, 370);
+        pincel.lineTo(215, 300);
+	pincel.stroke();
+    }else if (letrasEquivocadas.size == 6){ //brazoDer
+        pincel.beginPath();
+        pincel.lineWidth = 7;
+        pincel.strokeStyle = 'white';
+        pincel.lineCap = "round";
+        pincel.moveTo(300, 370);
+        pincel.lineTo(385, 300);
+	pincel.stroke();
+	pincel.textAlign = 'center';
+        pincel.font = '20px sans-serif';
+        pincel.fillText("X", 290, 260);
+	pincel.textAlign = 'center';
+        pincel.font = '20px sans-serif';
+        pincel.fillText("X", 310, 260);
+        pincel.lineWidth = 3;
+	pincel.moveTo(290, 280);
+        pincel.lineTo(310, 275);
+	pincel.stroke();
+    }
+}
+/*
+function dibujarAdvertencia(mensaje, y){
+    dibujarCuadroAdvertencia();
+    dibujarTexto(mensaje, y);
+    setTimeout(function(){
+	dibujarLimpiezaCuadro();
+    },3000);
+}
+
+function dibujarCuadroAdvertencia(){
+//    pincel.globalAlpha = 0.3;
+    pincel.fillStyle = "red";
+    pincel.fillRect(450, 200, 400, 200); 
+    pincel.fillStyle = "white";
+    pincel.fillRect(460, 210, 380, 180); 
+}
+
+
+function dibujarTexto(mensaje, y){
+    pincel.textAlign = 'left';
+    pincel.fillStyle = "black";
+    pincel.font = '20px sans-serif';
+    pincel.weight = 'bold';
+    pincel.fillText(mensaje, 500, y);
+    
+}
+
+function dibujarLimpiezaCuadro(){
+  //  pincel.globalAlpha = 1;
+    pincel.fillStyle = "#ffa74f";
+    pincel.fillRect(450, 200, 400, 200); // x, y, width, height
+
+}*/
+
+

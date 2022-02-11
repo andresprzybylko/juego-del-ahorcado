@@ -1,16 +1,74 @@
+/* 
+RESET advice by:
+https://piccalil.li/blog/a-modern-css-reset/ 
+*/
+  
+/* Box sizing rules 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+*/
+/* Remove default margin */
+body,
+h1,
+h2,
+canvas,
+div{
+  margin: 0;
+}
 
+
+/* make form elements easier to work with */
+
+
+/* Set core root defaults */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+/*  min-height: 100vh;*/
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+
+:root{
+    /* font-families */
+  --f-sans: 'Ubuntu', sans-serif;
+  --f-cursive: 'Architects Daughter', cursive;
+  text-align: center;
+  background: #fcde67; 
+
+}
+
+input,
+button{
+  font-family: var(--f-sans);
+  text-align: center;
+}
 .titulo {
   padding: 15px;
-  width: 30vw;
-  margin: auto;
+  min-width: 30vw;
+  margin: 5% 0;
+  font-family: var(--f-cursive);
+  font-size: 7vw;
+  color: #030e12;
 
 }
 
 .boton {
   border: 0;
+  background-color: #030e12;
   color: white;
   font-weight: bold;
-  background-color: blue;
   padding: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -19,14 +77,59 @@
 
 .text-input {
   border-radius: 0.5em;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.5);
   display: block;
   padding: 0.5em;
   width: 30%;
   height: 50px;
   margin-left: auto;
   margin-right: auto;
+  background-color: #030e12;
+  text-size: auto;
+  color: white;
 }
 
+#container-interaccion{
+  /*display: flex;
+  justify-content: center;*/
+  align-items: center;
+}
+
+.container{
+  position: relative;
+
+ /* text-align: center;*/
+}
+
+
 #canvas-ahorcado{
+  position: absolute;
+  display: block;
+  margin: 5%;
+  font-family: var(--f-cursive);
+  /*border-radius: 0.5em;
+  border: 5px solid rgba(5, 0, 0, 0.9);*/
+}
+
+#cartel-error{
+  position: relative;
+  display:block;
+  top: 200px;
+  left: 600px;
+  min-width: 30vw;
+  min-height: 0.5em;
+  padding: 10px; 
+  padding-top: 30px;
+  padding-left: 30px;
+  text-align: start;
+  font-size: 1.5em;
+  color: white;
+  font-family: var(--f-cursive);
+  
+  /*border-radius: 0.5em;
+  border: 5px solid rgba(5, 0, 0, 0.9);*/
+}
+
+.oculto{
+
 }

@@ -6,22 +6,24 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>El juego del ahorcado</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div style="text-align:center; margin: 50px 0px;">
+    <div >
       <h1 class="titulo">El juego del ahorcado</h1>
       <button class="boton" id="iniciar-juego">INICIAR JUEGO</button>
     </div>
-    <div style="text-align:center">
-      <input class="text-input" type="text" id="input-nueva-palabra" placeholder="Escriba una nueva palabra">
-      <button class="boton" id="nueva-palabra">AGREGAR PALABRA</button> 
+    <div id="container-interaccion">
+        <button class="boton" id="nueva-palabra">AGREGAR PALABRA</button> 
+        <input class="text-input" type="text" id="input-nueva-palabra" placeholder="Escriba una nueva palabra para ser adivinada"> 
     </div>
-
-    <div style="text-align:center;">
+    <div class="container">
       <canvas id="canvas-ahorcado" height="800px" width="1200px"></canvas>
+      <div id="cartel-error"></div>
     </div>
     <script type="text/javascript" src="canvas.js"></script>
     <script type="text/javascript" src="inicio-juego.js"></script>
-    <script type="text/javascript" src="desarrollo-juego.js"></script>
   </body>
 </html>
