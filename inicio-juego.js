@@ -25,8 +25,17 @@ var sonidoFinJuegoGanador = new Audio("sounds/15383_1460406134.mp3");
 var botonIniciarJuego = document.querySelector("#iniciar-juego");
 var html = document.querySelector("html");
 var cartelError = document.querySelector("#cartel-error");
+var botonAgregarPalabra = document.querySelector("#nueva-palabra");
 
 //desarrollo
+botonAgregarPalabra.addEventListener("click",function(event){
+    var inputPalabra = document.querySelector("#input-nueva-palabra").value;
+    var palabraMayuscula = inputPalabra.toUpperCase();
+    listaPalabras.push(palabraMayuscula);
+    nuevaPalabra = true;
+    document.querySelector("#input-nueva-palabra").value = "";    
+});
+
 botonIniciarJuego.addEventListener("click",function(event){
     sonidoInicio.play();
     crearTableroJuego(); //canvas.js
@@ -151,40 +160,4 @@ function limpiarMensaje(){
     cartelError.innerHTML = ""; 
 }
 
-/*
-//funcion de MDN
-function storageAvailable(type) {
-    try {
-        var storage = window[type],
-            x = '__storage_test__';
-        storage.setItem(x, x);
-        storage.removeItem(x);
-        return true;
-    }
-    catch(e) {
-        return e instanceof DOMException && (
-            // everything except Firefox
-            e.code === 22 ||
-            // Firefox
-            e.code === 1014 ||
-            // test name field too, because code might not be present
-            // everything except Firefox
-            e.name === 'QuotaExceededError' ||
-            // Firefox
-            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
-            // acknowledge QuotaExceededError only if there's something already stored
-            storage.length !== 0;
-    }
-}
 
-*/
-
-var botonAgregarPalabra = document.querySelector("#nueva-palabra");
-
-botonAgregarPalabra.addEventListener("click",function(event){
-    var inputPalabra = document.querySelector("#input-nueva-palabra").value;
-    var palabraMayuscula = inputPalabra.toUpperCase();
-    listaPalabras.push(palabraMayuscula);
-    nuevaPalabra = true;
-    document.querySelector("#input-nueva-palabra").value = "";    
-});
